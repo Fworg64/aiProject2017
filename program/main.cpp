@@ -1,0 +1,79 @@
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
+#include <stdio.h>
+extern "C" {
+#include "apriltag.h"
+#include "tag36h11.h"
+}
+
+using namespace cv;
+
+int main()
+{
+    VideoCapture cap(0);
+    if(!cap.isOpened()) return -1; //check for success
+
+    Mat img;
+    Mat img2(480, 640, CV_8UC3, Scalar(69,42,200));
+    Mat img3(480, 640, CV_8UC3, Scalar(69,42,200));
+
+    apriltag_detector_t *td = apriltag_detector_create();
+    apriltag_family_t *tf = tag36h11_create();
+
+    tf->black_border = 1; //from example
+
+    apriltag_detector_add_family(td, tf);
+
+    imshow("funfun", img2);
+
+    td->quad_decimate = 1.0;
+    td->quad_sigma = 0.0;
+    td->refine_edges = 1;
+    td->refine_decode = 0;
+    td->refine_pose = 0;
+
+    zarray_t *detections;
+
+    std::cout << "Warming up camera(2sec)"<< std::endl;
+
+    waitKey(2000); //let camera warm up
+
+    std::cout << "CAMERA HOT" <<std::endl;
+    while(1)
+    {
+	cap >> img; //c++ is the future
+	cvtColor(img, img2, COLOR_BGR2GRAY);
+	img3 = img;
+	imshow("COMPUTER VISION", img3);
+	std::cout <<"FRAME"<<std::endl;
+
+	image_u8_t img_header = { .width = img2.cols, //convert opencv to apriltag img
+        	.height = img2.rows,
+        	.stride = img2.cols,
+        	.buf = img2.data
+    		};
+
+	detections = apriltag_detector_detect(td, &img_header); //detect april tags
+
+	for (int i = 0; i < zarray_size(detections); i++) { //iterate through detections
+        apriltag_detection_t *det;
+        zarray_get(detections, i, &det); //store dection at adress pointed by det
+
+        // Do something with det here
+	//spit out tags
+	std::cout << det->id <<std::endl;
+	std::cout <<det->hamming<<std::endl;
+	std::cout << det->c[0]<<std::endl;
+	std::cout << det->c[1]<<std::endl;
+	
+	}
+
+        apriltag_detections_destroy(detections); //not sure if neccesary
+        if(waitKey(30) >= 0) break;
+    }
+    
+    //prevent memory leaks!
+    apriltag_detector_destroy(td);
+    tag36h11_destroy(tf);
+    return 0;
+}
