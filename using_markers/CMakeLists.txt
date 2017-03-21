@@ -126,6 +126,9 @@ include_directories(
  add_library(theball
    src/theball.cpp
 )
+ add_library(theplayer
+   src/theplayer.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -200,4 +203,4 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 add_executable(basic_shapes src/basic_shapes.cpp)
-target_link_libraries(basic_shapes thebot theball ${catkin_LIBRARIES})
+target_link_libraries(basic_shapes thebot theball theplayer ${catkin_LIBRARIES})

@@ -1,35 +1,34 @@
 #include <thebot.h>
 #include <math.h>
 
-thebot::thebot(double x1, double y1, double w1)
+thebot::thebot(ourposition* thePOS)
 {
-	x =x1;
-	y =y1;
-	w =w1;
+	myPOS = *thePOS;
 }
 	//todo, cache x,y directional vector upon turn ot avoid its calculation everytime
 
-void thebot::docmd(int cmd)
+void thebot::docmd(commands cmd)
 {
 	switch(cmd)
 	{
 		case GOFWD:
-			x+= cos(w);
-			y+= sin(w);
+			myPOS.x+= cos(myPOS.w);
+			myPOS.y+= sin(myPOS.w);
 		break;
 		case GOBKWD:
-			x-= cos(w);
-			y-= sin(w);
+			myPOS.x-= cos(myPOS.w);
+			myPOS.y-= sin(myPOS.w);
 		break;
 		case GOLEFT:
-			w+=.1;
+			myPOS.w+=.1;
 		break;
 		case GORGHT:
-			w-=.1;
+			myPOS.w-=.1;
 		break;
 	}
 }
 
-double thebot::getX() {return x;}
-double thebot::getY() {return y;}
-double thebot::getW() {return w;}
+double thebot::getX() {return myPOS.x;}
+double thebot::getY() {return myPOS.y;}
+double thebot::getW() {return myPOS.w;}
+ourposition* thebot::getPOS() {return &myPOS;}

@@ -2,22 +2,19 @@
 #ifndef THEBOT_H
 #define THEBOT_H
 
-#define GOFWD 1
-#define GOBKWD 2
-#define GOLEFT 3
-#define GORGHT 4
+#include <ourposition.h>
+#include <commands.h>
 
 class thebot {
 	private:
-	double x;
-	double y;
-	double w;
+	ourposition myPOS;
 	public:
-	thebot (double, double, double);
-	void docmd(int);
-	double getX();
-	double getY();
-	double getW();
+	thebot (ourposition*);
+	void docmd(commands);
+        ourposition* getPOS();
+        double getX();
+        double getY();
+        double getW();
 };
 
 

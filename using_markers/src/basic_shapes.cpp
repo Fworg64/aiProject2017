@@ -33,6 +33,7 @@
 #include <visualization_msgs/Marker.h>
 #include <thebot.h>
 #include <theball.h>
+#include <theplayer.h>
 // %EndTag(INCLUDES)%
 
 // %Tag(INIT)%
@@ -154,9 +155,16 @@ int main( int argc, char** argv )
     ballmarker.color.a = 1.0;
     ballmarker.lifetime = ros::Duration();
   
-    thebot mybot1(0,0,0);
-    thebot mybot2(2,0,0);
-    thebot mybot3(0,-2,0);
+    ourposition position1 = {0,0,0};
+    ourposition position2 = {2,0,0};
+    ourposition position3 = {0,-2,0};
+    thebot mybot1(&position1);
+    thebot mybot2(&position2);
+    thebot mybot3(&position3);
+
+    theplayer player1(&position1);
+    theplayer player2(&position2);
+    theplayer player3(&position3);
     theball myball(0,0);
 
   while (ros::ok())
@@ -238,18 +246,12 @@ int main( int argc, char** argv )
     ballmarker.pose.position.x = myball.getX();
     ballmarker.pose.position.y = myball.getY();
 
-    mybot1.docmd(GOFWD);
-    mybot1.docmd(GOLEFT);
-
-    mybot2.docmd(GOBKWD);
-    mybot2.docmd(GORGHT);
-
-    mybot3.docmd(GOLEFT);
-    mybot3.docmd(GOLEFT);
-    mybot3.docmd(GOFWD);
+    mybot1.docmd(player1.eval(mybot1.getPOS(), myball.getX(), myball.getY()));
+    mybot2.docmd(player2.eval(mybot2.getPOS(), myball.getX(), myball.getY()));
+    mybot3.docmd(player3.eval(mybot3.getPOS(), myball.getX(), myball.getY()));
 
     myball.eval();
-    if (ballcounter++ > 100) myball.kick(.02,.02);
+    //if (ballcounter++ > 100) myball.kick(.02,.02);
 
     marker_pub.publish(marker);
     marker_pub.publish(marker2);
