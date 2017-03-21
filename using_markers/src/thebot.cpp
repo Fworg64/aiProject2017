@@ -21,9 +21,11 @@ void thebot::docmd(commands cmd)
 		break;
 		case GOLEFT:
 			myPOS.w+=.1;
+                        if (myPOS.w >6.28) myPOS.w =0;
 		break;
 		case GORGHT:
 			myPOS.w-=.1;
+                        if (myPOS.w < 0) myPOS.w = 6.28;
 		break;
 	}
 }
