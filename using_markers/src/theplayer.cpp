@@ -28,7 +28,7 @@ commands theplayer::go2waypoint(double x, double y)
 	printf("player x = %f ball x = %f alpha :%f omega = %f\n", myPOS.x, x, alpha, myPOS.w);
 	if (d_e > 1)
 {
-        if (abs(alpha - myPOS.w) > 30) 
+        if (abs(alpha - myPOS.w) > 10) 
 	{
 		if (alpha > myPOS.w) return GOLEFT;
 		else return GORGHT;
