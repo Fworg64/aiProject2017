@@ -20,12 +20,12 @@ void thebot::docmd(commands cmd)
 			myPOS.y-= sin(myPOS.w);
 		break;
 		case GOLEFT:
-			myPOS.w+=0.02;
-                        //if (myPOS.w >3.14) myPOS.w =-3.14;
+			myPOS.w+=20;
+                        if (myPOS.w > 180) myPOS.w -=360;
 		break;
 		case GORGHT:
-			myPOS.w-=0.02;
-                        //if (myPOS.w < -3.14) myPOS.w = 3.14;
+			myPOS.w-=20;
+                        if (myPOS.w < -180) myPOS.w += 360;
 		break;
 	}
 }

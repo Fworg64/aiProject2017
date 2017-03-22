@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+# define PI           3.14159265358979323846
+
 commands theplayer::go2waypoint(double x, double y)
 {
 
@@ -10,14 +12,29 @@ commands theplayer::go2waypoint(double x, double y)
 
     //float alpha = acos((myPOS.x-x)/pow (pow(myPOS.x-x,2)+pow(myPOS.y-y,2),0.5));
     
- double alpha = atan2((y - myPOS.y), (x - myPOS.x));
+	double alpha;
+	double dx = x - myPOS.x;
+	double dy = y - myPOS.y;
+
+	 float d_e = sqrt(dx * dx + dy * dy);
+	 if (dx == 0 && dy == 0)
+	 alpha = 90;
+	 else
+	 alpha = (int)(180. / PI *
+	 atan2((double)(dy), (double)(dx)));
+	 //theta_e = alpha - (int)myPOS.w;
+
+ 	// = atan2((y - myPOS.y), (x - myPOS.x));
 	printf("player x = %f ball x = %f alpha :%f omega = %f\n", myPOS.x, x, alpha, myPOS.w);
-        if (abs(alpha - myPOS.w) > .5) 
+	if (d_e > 1)
+{
+        if (abs(alpha - myPOS.w) > 30) 
 	{
 		if (alpha > myPOS.w) return GOLEFT;
 		else return GORGHT;
 	}
 	else return GOFWD;
+}
 
    // if (myPOS.x < x +.4 ) //waypoint is to the right
    /*{
