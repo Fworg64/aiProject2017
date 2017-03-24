@@ -4,51 +4,65 @@
 #include <stdlib.h>
 
 # define PI           3.14159265358979323846
+#define OBSTGAIN .05
 
-commands theplayer::go2waypoint(double x, double y)
+double theplayer::getangleofline(double dx, double dy)
 {
-
-     //orient robot towards ball
-
-    //float alpha = acos((myPOS.x-x)/pow (pow(myPOS.x-x,2)+pow(myPOS.y-y,2),0.5));
-   /* 
-	double alpha;
-	double dx = x - myPOS.x;
-	double dy = y - myPOS.y;
-
-	 float d_e = sqrt(dx * dx + dy * dy);
-	 if (dx == 0 && dy == 0)
-	 alpha = 90;
-	 else
-	 alpha = (int)(180. / PI *
-	 atan2((double)(dy), (double)(dx)));
-	 //theta_e = alpha - (int)myPOS.w;
-
- 	// = atan2((y - myPOS.y), (x - myPOS.x));
-	printf("player x = %f ball x = %f alpha :%f omega = %f\n", myPOS.x, x, alpha, myPOS.w);
-	if (d_e > 1)
-{
-        if (abs(alpha - myPOS.w) > 10) 
-	{
-		if (alpha > myPOS.w) return GOLEFT;	
-		else return GORGHT;
-	}
-	else return GOFWD;
-}
-
- */
-            double dx = x - myPOS.x;
-            double dy = y - myPOS.y;
-
-            double lAngle = atan2(dy, dx);
+            double lAngle = atan2(dx, dy);
 
             lAngle = abs(lAngle * 180 / PI);
 
             if ((dx >= 0) && (dy >= 0)) { lAngle = 360 - lAngle; }
             if ((dx < 0) && (dy >= 0)) { lAngle = 270 - (lAngle - 90); }
-	
-                      
-           // return abs(lAngle);     
+    
+            return abs(lAngle);
+} 
+
+std::vector<double> theplayer::getpathvector(std::vector<std::vector<double> > obstacles, std::vector<double> goal)
+{
+    std::vector<double> tempgoal(2);
+    tempgoal.at(0) = goal.at(0) -myPOS.x ;
+    tempgoal.at(1) = goal.at(1) - myPOS.y;
+
+    printf("goal x: %f.4    goal y: %f.4\n", tempgoal.at(0), tempgoal.at(1));
+
+    std::vector<std::vector<double> > tempobstacles(obstacles.size());
+
+    double theta1 =0;
+    double theta2=0;
+    int index =0;
+    for (index = 0; index<obstacles.size();index++)
+    {
+      theta1 =getangleofline(tempgoal.at(0), tempgoal.at(1));
+      theta2 = getangleofline(obstacles.at(index).at(0) -myPOS.x,obstacles.at(index).at(1)-myPOS.y);
+      
+      tempobstacles.at(index).at(0) = obstacles.at(index).at(1) -myPOS.y;
+      tempobstacles.at(index).at(1) = obstacles.at(index).at(0) - myPOS.x;
+      double tempthing = tempobstacles.at(index).at(0)*tempobstacles.at(index).at(0) + tempobstacles.at(index).at(1)*tempobstacles.at(index).at(1);
+      tempobstacles.at(index).at(0) = tempthing/tempobstacles.at(index).at(0);
+      tempobstacles.at(index).at(1) = tempthing/tempobstacles.at(index).at(1);
+
+
+      if(theta1 > theta2)
+      {
+           tempobstacles.at(index).at(0) = -tempobstacles.at(index).at(0);
+      } 
+      else
+      {
+           tempobstacles.at(index).at(1) = -tempobstacles.at(index).at(1);
+      }
+
+      printf("Obstacle%d x: %f.4, y: %f.4\n", index, tempobstacles.at(index).at(0), tempobstacles.at(index).at(1));
+
+         
+    }
+    std::vector<double> garbage(2);
+    return garbage;
+
+}
+
+commands theplayer::go2waypoint(double x, double y)
+{
 
 		return GOFWD;     
         
