@@ -10,12 +10,11 @@ double theplayer::getangleofline(double dx, double dy)
 {
             double lAngle = atan2(dx, dy);
 
-            lAngle = abs(lAngle * 180 / PI);
-
-            if ((dx >= 0) && (dy >= 0)) { lAngle = 360 - lAngle; }
-            if ((dx < 0) && (dy >= 0)) { lAngle = 270 - (lAngle - 90); }
+            //if ((dx >= 0) && (dy >= 0)) { lAngle = 360 - lAngle; }
+            //if ((dx < 0) && (dy >= 0)) { lAngle = 270 - (lAngle - 90); }
+            lAngle = lAngle * 180 / PI;
     
-            return abs(lAngle);
+            return lAngle;
 } 
 
 std::vector<double> theplayer::getpathvector(std::vector<std::vector<double> > obstacles, std::vector<double> goal)
@@ -64,13 +63,17 @@ std::vector<double> theplayer::getpathvector(std::vector<std::vector<double> > o
 commands theplayer::go2waypoint(double x, double y)
 {
 
-		return GOFWD;     
+    double theta1 = getangleofline(x-myPOS.x, y-myPOS.y);
+
+    if (myPOS.w > theta1 + 20) return GORGHT;
+    else if (myPOS.w < theta1 -20) return GOLEFT;
+    else return GOFWD;     
         
 
     //go towards ball
 }
 
-commands theplayer::eval(ourposition* position1, double ballx, double bally)
+commands theplayer::eval(ourposition* position1, std::vector<std::vector<double> > obstacles, double ballx, double bally)
 {
 	myPOS = *position1;
     	return go2waypoint(ballx, bally);

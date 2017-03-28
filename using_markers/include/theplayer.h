@@ -6,14 +6,14 @@
 #include <vector>
 
 class theplayer {
-    private:
+    public:
         ourposition myPOS;
         commands go2waypoint(double,double);
         double getangleofline(double, double);
         std::vector<double> getpathvector(std::vector<std::vector<double> >, std::vector<double>); //obstacles, goal
     public:
          theplayer(ourposition*);
-         commands eval(ourposition*, double, double);
+         commands eval(ourposition*,std::vector<std::vector<double> >, double, double);
          //wants playerx, y, w, ballx, bally
          //returns motor command
 };
