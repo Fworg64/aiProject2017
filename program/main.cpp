@@ -1,9 +1,18 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
+#include <commands.h>
+#include <ourposition.h>
+#include <theplayer.h>
+
 extern "C" {
 #include "apriltag.h"
 #include "tag36h11.h"
+}
+
+void sendCmd(uint32_t myrobotid, int8_t leftwheel, int8_t rightwheel)
+{
+   printf("id: %d, cmdL:%d, cmdR:%d", myrobotid, leftwheel, rightwheel);
 }
 
 using namespace cv;
@@ -39,6 +48,11 @@ int main()
     waitKey(2000); //let camera warm up
 
     std::cout << "CAMERA HOT" <<std::endl;
+
+    ourposition player1pos = {0,0,0};
+    theplayer player1(&player1pos);
+    commands p1cmd;
+
     while(1)
     {
 	cap >> img; //c++ is the future
@@ -59,8 +73,17 @@ int main()
         apriltag_detection_t *det;
         zarray_get(detections, i, &det); //store dection at adress pointed by det
 
+       //find ball here
+
         // Do something with det here
 	//spit out tags
+        p1cmd = player1.go2waypoint(3,3);
+        uint8_t rwheel = 14;
+        uint8_t lwheel = 10;
+
+        sendCmd(1400, rwheel, lwheel);
+
+
 	std::cout << det->id <<std::endl;
 	std::cout <<det->hamming<<std::endl;
 	std::cout << det->c[0]<<std::endl;
