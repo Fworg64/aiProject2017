@@ -19,10 +19,10 @@ using namespace cv;
 
 int main()
 {
-    VideoCapture cap(0);
-    if(!cap.isOpened()) return -1; //check for success
-
-    Mat img;
+   // VideoCapture cap(0);
+   // if(!cap.isOpened()) return -1; //check for success
+    char* imageName = argv[1];
+    Mat img =imread(imageName, 1);
     Mat img2(480, 640, CV_8UC3, Scalar(69,42,200));
     Mat img3(480, 640, CV_8UC3, Scalar(69,42,200));
 
@@ -45,7 +45,7 @@ int main()
 
     std::cout << "Warming up camera(2sec)"<< std::endl;
 
-    waitKey(2000); //let camera warm up
+    //waitKey(2000); //let camera warm up
 
     std::cout << "CAMERA HOT" <<std::endl;
 
@@ -53,9 +53,9 @@ int main()
     theplayer player1(&player1pos);
     commands p1cmd;
 
-    while(1)
+    //while(1)
     {
-	cap >> img; //c++ is the future
+	//cap >> img; //c++ is the future
 	cvtColor(img, img2, COLOR_BGR2GRAY);
 	img3 = img;
 	imshow("COMPUTER VISION", img3);
@@ -92,7 +92,7 @@ int main()
 	}
 
         apriltag_detections_destroy(detections); //not sure if neccesary
-        if(waitKey(30) >= 0) break;
+        //if(waitKey(30) >= 0) break;
     }
     
     //prevent memory leaks!

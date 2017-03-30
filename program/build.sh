@@ -17,7 +17,7 @@ g++ -c -I. -o theplayer.o theplayer.cpp -Wall -std=c++11
 #build final package with opencv and apriltag options
 
 #build by telling it all the object files
-g++ -ggdb `pkg-config --cflags opencv` -o `basename main.cpp .cpp` main.cpp apriltag.o apriltag_quad_thresh.o tag36h11.o theplayer.o ./common/*.o -I. -lm -lpthread `pkg-config --libs opencv`
+g++ -ggdb `pkg-config --cflags opencv` -o `basename main.cpp .cpp` main.cpp apriltag.o apriltag_quad_thresh.o tag36h11.o theplayer.o ./common/*.o -lm `pkg-config --libs opencv`
 
 
 ##=###========##### UNMAINTAINED BELOW  ######========###=##
