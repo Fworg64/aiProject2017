@@ -17,7 +17,7 @@ void sendCmd(uint32_t myrobotid, int8_t leftwheel, int8_t rightwheel)
 
 using namespace cv;
 
-int main()
+int main(int argc, char** argv)
 {
    // VideoCapture cap(0);
    // if(!cap.isOpened()) return -1; //check for success
