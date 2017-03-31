@@ -25,6 +25,9 @@ int main(int argc, char** argv)
     Mat img =imread(imageName, 1);
     Mat img2(480, 640, CV_8UC3, Scalar(69,42,200));
     Mat img3(480, 640, CV_8UC3, Scalar(69,42,200));
+    Mat img4(480, 640, CV_8UC3, Scalar(69,42,200));
+    Mat img5(480, 640, CV_8UC3, Scalar(69,42,200));
+    Mat img6(480, 640, CV_8UC3, Scalar(69,42,200));
 
     apriltag_detector_t *td = apriltag_detector_create();
     apriltag_family_t *tf = tag36h11_create();
@@ -32,8 +35,6 @@ int main(int argc, char** argv)
     tf->black_border = 1; //from example
 
     apriltag_detector_add_family(td, tf);
-
-    imshow("funfun", img2);
 
     td->quad_decimate = 1.0;
     td->quad_sigma = 0.0;
@@ -52,6 +53,8 @@ int main(int argc, char** argv)
     ourposition player1pos = {0,0,0};
     theplayer player1(&player1pos);
     commands p1cmd;
+
+    Size_<int> mysize(5, 5);
 
     //while(1)
     {
@@ -74,6 +77,13 @@ int main(int argc, char** argv)
         zarray_get(detections, i, &det); //store dection at adress pointed by det
 
        //find ball here
+       // GaussianBlur(img3, img4, Size(5,5), 5,5,BORDER_ISOLATED);
+        GaussianBlur(img3, img4, mysize, 5);//, 5, BORDER_ISOLATED);
+        imshow("Blurred", img4);
+        cvtColor(img4, img5, COLOR_BGR2HSV);
+        imshow("converted", img5);
+        inRange(img5, Scalar(25, 50, 20), Scalar(60, 255, 255), img6);
+        imshow("BALL", img6);
 
         // Do something with det here
 	//spit out tags
@@ -93,7 +103,7 @@ int main(int argc, char** argv)
 
         apriltag_detections_destroy(detections); //not sure if neccesary
         //if(waitKey(3000) >= 0) break;
-        waitKey(3000);
+        waitKey(30000);
     }
     
     //prevent memory leaks!
