@@ -92,7 +92,8 @@ int main(int argc, char** argv)
 	}
 
         apriltag_detections_destroy(detections); //not sure if neccesary
-        //if(waitKey(30) >= 0) break;
+        //if(waitKey(3000) >= 0) break;
+        waitKey(3000);
     }
     
     //prevent memory leaks!
