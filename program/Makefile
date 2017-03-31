@@ -1,18 +1,16 @@
 INCLUDES = -I. -I./common
 CXX=g++
-CXXFLAGS=-c -Wall -lm `pkg-config opencv --cflags --libs` 
+CXXFLAGS=-c -Wall 
 
 CC=gcc
-CCFLAGS=-c -Wall -lm -std=gnu99
-LDFLAGS= -Wall -lpthread `pkg-config opencv --cflags --libs` 
-
+CCFLAGS=-c -Wall -std=gnu99
+LDFLAGS= -Wall -lpthread -lm `pkg-config opencv --cflags --libs` 
 
 CXXSOURCES= $(wildcard *.cpp)
 CSOURCES= $(wildcard *.c) $(wildcard common/*.c)
 CXXOBJECTS= $(CXXSOURCES:%.cpp=build/%.o)
 COBJECTS= $(CSOURCES:%.c=build/%.o)
 EXECUTABLE=build/main
-
 
 
 .PHONY: directories clean techo
