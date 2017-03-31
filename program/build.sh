@@ -16,7 +16,7 @@ gcc -c -I. -o ./common/image_u8x4.o ./common/image_u8x4.c -std=gnu99 -Wall
 
 gcc -c -I. -o ./common/matd.o ./common/matd.c -std=gnu99 -Wall
 gcc -c -I. -o ./common/pam.o ./common/pam.c -std=gnu99 -Wall
-gcc -c -I. -o ./common/pjpeg.o ./common/pjpeg.c -std=gnu99 -Wall
+gcc -c -I. -o ./common/pjpeg-idtc.o ./common/pjpeg-idct.c -std=gnu99 -Wall
 
 gcc -c -I. -o ./common/pnm.o ./common/pnm.c -std=gnu99 -Wall
 gcc -c -I. -o ./common/string_util.o ./common/string_util.c -std=gnu99 -Wall
