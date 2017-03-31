@@ -1,6 +1,6 @@
 INCLUDES = -I. -I./common
 CXX=g++
-CXXFLAGS=-c -Wall -lm `pkg-config opencv --cflags --libs` 
+CXXFLAGS=-c -Wall -lm `pkg-config opencv --cflags --libs` -o 'basename main.cpp .cpp'
 
 CC=gcc
 CCFLAGS=-c -Wall -lm -std=gnu99
