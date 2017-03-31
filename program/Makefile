@@ -1,10 +1,12 @@
 INCLUDES = -I. -I./common
 CXX=g++
-CXXFLAGS=-c -Wall 
+CXXFLAGS=-c -Wall
 
 CC=gcc
 CCFLAGS=-c -Wall -std=gnu99
-LDFLAGS= -Wall -lpthread -lm `pkg-config opencv --cflags --libs` 
+LDFLAGS= -Wall
+
+LIBS=  -lpthread -lm `pkg-config --libs opencv`
 
 CXXSOURCES= $(wildcard *.cpp)
 CSOURCES= $(wildcard *.c) $(wildcard common/*.c)
@@ -12,8 +14,10 @@ CXXOBJECTS= $(CXXSOURCES:%.cpp=build/%.o)
 COBJECTS= $(CSOURCES:%.c=build/%.o)
 EXECUTABLE=build/main
 
+OUT_DIR= build build/common
+MKDIR_P= mkdir -p
 
-.PHONY: directories clean techo
+.PHONY: all directories clean techo
 
 all: $(CSOURCES) $(CXXSOURCES) $(EXECUTABLE)
 
@@ -23,18 +27,19 @@ techo:
 	@echo $(CSOURCES)
 	@echo $(wildcard common/*.c)
 
-$(EXECUTABLE): $(CXXOBJECTS) $(COBJECTS)
-	$(CXX) $(LDFLAGS) $(CXXOBJECTS) $(COBJECTS) -o $@
+$(EXECUTABLE): $(CXXOBJECTS) $(COBJECTS) | directories
+	$(CXX) $(LDFLAGS) $(CXXOBJECTS) $(COBJECTS) -o $@ $(LIBS) 
 
-$(CXXOBJECTS): build/%.o : %.cpp directories
+$(CXXOBJECTS): build/%.o : %.cpp | directories
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
 
-$(COBJECTS): build/%.o : %.c directories
+$(COBJECTS): build/%.o : %.c | directories
 	$(CC) $(CCFLAGS) $(INCLUDES) $< -o $@
 
-directories:
-	mkdir -p build
-	mkdir -p build/common
+directories: $(OUT_DIR)
+
+$(OUT_DIR):
+	$(MKDIR_P) $(OUT_DIR)
 
 clean:
 	rm -r build
