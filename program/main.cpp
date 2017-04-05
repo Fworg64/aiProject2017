@@ -28,6 +28,22 @@ int main(int argc, char** argv)
     Mat img4(480, 640, CV_8UC3, Scalar(69,42,200));
     Mat img5(480, 640, CV_8UC3, Scalar(69,42,200));
     Mat img6(480, 640, CV_8UC3, Scalar(69,42,200));
+    Mat img7(480, 640, CV_8UC3, Scalar(69,42,200));
+    Mat channels[3];
+    
+    SimpleBlobDetector::Params params;
+    params.filterByInertia = true;
+    params.minInertiaRatio = 0.01;
+    params.filterByConvexity = true;
+    params.minConvexity = 0.07;
+    params.filterByArea = true;
+    params.minArea = 150;
+
+    SimpleBlobDetector detector(params);
+    std::vector<KeyPoint> keypoints;
+
+    
+
 
     apriltag_detector_t *td = apriltag_detector_create();
     apriltag_family_t *tf = tag36h11_create();
@@ -80,10 +96,18 @@ int main(int argc, char** argv)
        // GaussianBlur(img3, img4, Size(5,5), 5,5,BORDER_ISOLATED);
         GaussianBlur(img3, img4, mysize, 5);//, 5, BORDER_ISOLATED);
         imshow("Blurred", img4);
+        split(img4, channels);
+        channels[0]=Mat::zeros(img4.rows, img4.cols, CV_8UC1);//Set blue channel to 0
+        channels[1]=Mat::zeros(img4.rows, img4.cols, CV_8UC1);//Set blue channel to 0
+        
         cvtColor(img4, img5, COLOR_BGR2HSV);
+	//merge(channels, 3, img5);
+	//cvtColor(img5, img6, COLOR_BGR2GRAY);
         imshow("converted", img5);
-        inRange(img5, Scalar(25, 50, 20), Scalar(60, 255, 255), img6);
-        imshow("BALL", img6);
+        inRange(img5, Scalar(15, 175, 175), Scalar(50, 255, 255), img6);
+        bitwise_not(img6, img7);
+        imshow("BALL", img7);
+        detector.detect(img7, keypoints);
 
         // Do something with det here
 	//spit out tags
@@ -98,6 +122,10 @@ int main(int argc, char** argv)
 	std::cout <<det->hamming<<std::endl;
 	std::cout << det->c[0]<<std::endl;
 	std::cout << det->c[1]<<std::endl;
+        if (keypoints.size() >0)
+        std::cout <<keypoints.at(0).pt.x<<"    "<<keypoints.at(0).pt.y<<std::endl;
+        else
+        std::cout << "no balls found"<<std::endl;
 	
 	}
 
