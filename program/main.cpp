@@ -39,7 +39,8 @@ int main(int argc, char** argv)
     params.filterByArea = true;
     params.minArea = 150;
 
-    SimpleBlobDetector detector(params);
+    //SimpleBlobDetector detector(params);
+    Ptr<SimpleBlobDetector> detector = SimpleBlobDetector::create(params);
     std::vector<KeyPoint> keypoints;
 
     
@@ -103,11 +104,12 @@ int main(int argc, char** argv)
         cvtColor(img4, img5, COLOR_BGR2HSV);
 	//merge(channels, 3, img5);
 	//cvtColor(img5, img6, COLOR_BGR2GRAY);
-        imshow("converted", img5);
+	namedWindow("hsv", WINDOW_AUTOSIZE);
+        imshow("hsv", img5);
         inRange(img5, Scalar(15, 175, 175), Scalar(50, 255, 255), img6);
         bitwise_not(img6, img7);
         imshow("BALL", img7);
-        detector.detect(img7, keypoints);
+        detector->detect(img7, keypoints);
 
         // Do something with det here
 	//spit out tags
