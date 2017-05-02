@@ -29,7 +29,7 @@ std::vector<double> theplayer::getpathvector(std::vector<std::vector<double> > o
 
     double theta1 =0;
     double theta2=0;
-    int index =0;
+    int unsigned index =0;
     for (index = 0; index<obstacles.size();index++)
     {
       theta1 =getangleofline(tempgoal.at(0), tempgoal.at(1));
