@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     if(!cap.isOpened()) return -1; //check for success
     //char* imageName = argv[1];
     //Mat img =imread(imageName, 1);
-	Mat img;
+	Mat img(480, 640, CV_8UC3, Scalar(69,42,200));
     Mat img2(480, 640, CV_8UC3, Scalar(69,42,200));
     Mat img3(480, 640, CV_8UC3, Scalar(69,42,200));
     Mat img4(480, 640, CV_8UC3, Scalar(69,42,200));
@@ -70,8 +70,18 @@ int main(int argc, char** argv)
     ourposition player1pos = {0,0,0};
     theplayer player1(&player1pos);
     commands p1cmd;
+	double p1obstacles[10]; //5 obstacles, x,y,x,y,x,y,x,y...
+	//change this later with other player positions, weight enemy players higher
+	p1obstacles[0] = 2.2;
+	p1obstacles[1] = 5.5;
+	std::cout <<"initialized player objects"<<std::endl;
 
-    Size_<int> mysize(5, 5);
+    Size_<int> mysize(5, 5); //kernal for gaussian blur
+
+	namedWindow("COMPUTER VISION");
+	namedWindow("Blurred");
+	namedWindow("converted");
+	namedWindow("BALL");
 
     while(1)
     {
@@ -96,6 +106,13 @@ int main(int argc, char** argv)
 		std::cout <<det->hamming<<std::endl;
 		std::cout << det->c[0]<<std::endl;
 		std::cout << det->c[1]<<std::endl;
+
+		if (det->id == 0) //populate position of player from tag id
+		{
+			player1pos.x = det->c[0];
+			player1pos.y = det->c[1];
+			player1pos.w = atan2(det->p[0][0] - det->c[0], -(det->p[0][1] - det->c[1]));
+		}
 }
 
        //find ball here
@@ -114,24 +131,19 @@ int main(int argc, char** argv)
         bitwise_not(img6, img7);
         imshow("BALL", img7);
 
-        // Do something with det here
-	//spit out tags
-        p1cmd = player1.go2waypoint(3,3);
-        uint8_t rwheel = 14;
-        uint8_t lwheel = 10;
-
         detector.detect(img7, keypoints);
-
-        sendCmd(1400, rwheel, lwheel);
         if (keypoints.size() >0)
-        std::cout <<keypoints.at(0).pt.x<<"    "<<keypoints.at(0).pt.y<<std::endl;
+		{
+        	std::cout <<keypoints.at(0).pt.x<<"    "<<keypoints.at(0).pt.y<<std::endl;
+			p1cmd = player1.eval(&player1pos, p1obstacles, (double)keypoints.at(0).pt.x,(double) keypoints.at(0).pt.y);
+        	sendCmd(100, (p1cmd == GOFWD || p1cmd == GOLEFT) ? 1: (p1cmd==GOBKWD) ? -1: 0, (p1cmd == GOFWD || p1cmd == GORGHT) ? 1: (p1cmd==GOBKWD) ? -1: 0);
+		}
         else
-        std::cout << "no balls found"<<std::endl;
-	
+        std::cout << "no balls found, no command issued"<<std::endl;
 
         apriltag_detections_destroy(detections); //not sure if neccesary
         //if(waitKey(3000) >= 0) break;
-        //waitKey(30000);
+        waitKey(30); //neccesary
     }
     
     //prevent memory leaks!

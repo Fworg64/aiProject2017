@@ -73,7 +73,7 @@ commands theplayer::go2waypoint(double x, double y)
     //go towards ball
 }
 
-commands theplayer::eval(ourposition* position1, std::vector<std::vector<double> > obstacles, double ballx, double bally)
+commands theplayer::eval(ourposition* position1, double* obstacles, double ballx, double bally)
 {
 	myPOS = *position1;
     	return go2waypoint(ballx, bally);
