@@ -4,6 +4,7 @@
 #include <commands.h>
 #include <ourposition.h>
 #include <theplayer.h>
+#include "realbot.h"
 
 extern "C" {
 #include "apriltag.h"
@@ -13,12 +14,15 @@ extern "C" {
 void sendCmd(uint32_t myrobotid, int8_t leftwheel, int8_t rightwheel)
 {
    printf("id: %d, cmdL:%d, cmdR:%d", myrobotid, leftwheel, rightwheel);
+   command_bot(myrobotid, leftwheel, rightwheel);
 }
 
 using namespace cv;
 
 int main(int argc, char** argv)
 {
+
+    init_bots("/dev/ttyACM0");
     VideoCapture cap(0);
     if(!cap.isOpened()) return -1; //check for success
     //char* imageName = argv[1];
