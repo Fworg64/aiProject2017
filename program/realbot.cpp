@@ -28,8 +28,8 @@ int init_bots(std::string ifname) {
 
 	struct termios options;
 	tcgetattr(_fd, &options);
-	cfsetispeed(&options, B115200);
-	cfsetospeed(&options, B115200);
+	cfsetispeed(&options, B9600); //changed to 9600 from 115200
+	cfsetospeed(&options, B9600);
 	options.c_cflag |= (CLOCAL | CREAD);
 	tcsetattr(_fd, TCSANOW, &options);
 

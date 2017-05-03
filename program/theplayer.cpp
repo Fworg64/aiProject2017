@@ -64,6 +64,7 @@ commands theplayer::go2waypoint(double x, double y)
 {
 
     double theta1 = getangleofline(x-myPOS.x, y-myPOS.y);
+	printf("Player to ball angle: %f.4", theta1);
 
     if (myPOS.w > theta1 + 20) return GORGHT;
     else if (myPOS.w < theta1 -20) return GOLEFT;
