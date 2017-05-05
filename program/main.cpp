@@ -22,7 +22,7 @@ using namespace cv;
 int main(int argc, char** argv)
 {
 
-    init_bots("/dev/ttyACM0");
+    init_bots("/dev/ttyUSB0");
     VideoCapture cap(0);
     if(!cap.isOpened()) return -1; //check for success
     //char* imageName = argv[1];

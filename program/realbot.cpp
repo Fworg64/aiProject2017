@@ -53,6 +53,6 @@ void command_bot(uint32_t id, int8_t left, int8_t right) {
 
 	int n = write(_fd, &data, sizeof(botdata));
 
-	std::cout << "serial write result: " << n <<std::endl;
+	std::cout << " serial write result: " << n <<std::endl;
 
 }
