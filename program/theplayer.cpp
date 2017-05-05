@@ -64,6 +64,7 @@ commands theplayer::go2waypoint(double x, double y)
 {
 
     double theta1 = getangleofline(x-myPOS.x, y-myPOS.y);
+	printf("Player to ball angle: %f.4", theta1);
 
     if (myPOS.w > theta1 + 20) return GORGHT;
     else if (myPOS.w < theta1 -20) return GOLEFT;
@@ -73,7 +74,7 @@ commands theplayer::go2waypoint(double x, double y)
     //go towards ball
 }
 
-commands theplayer::eval(ourposition* position1, std::vector<std::vector<double> > obstacles, double ballx, double bally)
+commands theplayer::eval(ourposition* position1, double* obstacles, double ballx, double bally)
 {
 	myPOS = *position1;
     	return go2waypoint(ballx, bally);

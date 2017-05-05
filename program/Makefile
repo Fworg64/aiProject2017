@@ -1,6 +1,6 @@
 INCLUDES = -I. -I./common
 CXX=g++
-CXXFLAGS=-c -Wall
+CXXFLAGS=-c -Wall -std=gnu++11
 
 CC=gcc
 CCFLAGS=-c -Wall -std=gnu99
