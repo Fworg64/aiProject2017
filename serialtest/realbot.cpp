@@ -28,8 +28,8 @@ int init_bots(std::string ifname) {
 
 	struct termios options;
 	tcgetattr(_fd, &options);
-	cfsetispeed(&options, B9600);
-	cfsetospeed(&options, B9600);
+	cfsetispeed(&options, B115200);
+	cfsetospeed(&options, B115200);
 	options.c_cflag |= (CLOCAL | CREAD);
 	tcsetattr(_fd, TCSANOW, &options);
 
@@ -53,6 +53,6 @@ void command_bot(uint32_t id, int8_t left, int8_t right) {
 
 	int n = write(_fd, &data, sizeof(botdata));
 
-	std::cout << "serial write result: " << n <<std::endl;
+	std::cout << " serial write result: " << n <<std::endl;
 
 }
