@@ -44,13 +44,13 @@ typedef struct __attribute__((__packed__)) botdata {
 } botdata;
 // https://www.cmrr.umn.edu/~strupp/serial.html
 void command_bot(uint32_t id, int8_t left, int8_t right) {
-	std::cout << "id " << id << "\tleft\t" << (int)left << "\tright\t" << (int)right;
 	botdata data;
 	data.command = 0x02;
 	data.id = id;
 	data.left = left;
 	data.right = right;
 
+	std::cout << "id " << data.id << "\tleft\t" << (int)data.left << "\tright\t" << (int)data.right;
 	int n = write(_fd, &data, sizeof(botdata));
 
 	std::cout << " serial write result: " << n <<std::endl;
