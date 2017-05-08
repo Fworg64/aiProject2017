@@ -11,6 +11,13 @@ extern "C" {
 #include "tag36h11.h"
 }
 
+int hlow = 15;
+int slow = 175;
+int vlow = 175;
+int hhigh = 50;
+int shigh = 255;
+int vhigh = 255;
+
 void sendCmd(uint32_t myrobotid, int8_t leftwheel, int8_t rightwheel)
 {
    printf("id: %d, cmdL:%d, cmdR:%d \n", myrobotid, leftwheel, rightwheel);
@@ -23,17 +30,17 @@ int main(int argc, char** argv)
 {
 
     init_bots("/dev/ttyUSB0");
-    VideoCapture cap(0);
+    VideoCapture cap(1);
     if(!cap.isOpened()) return -1; //check for success
     //char* imageName = argv[1];
     //Mat img =imread(imageName, 1);
-	Mat img(480, 640, CV_8UC3, Scalar(69,42,200));
-    Mat img2(480, 640, CV_8UC3, Scalar(69,42,200));
-    Mat img3(480, 640, CV_8UC3, Scalar(69,42,200));
-    Mat img4(480, 640, CV_8UC3, Scalar(69,42,200));
-    Mat img5(480, 640, CV_8UC3, Scalar(69,42,200));
-    Mat img6(480, 640, CV_8UC3, Scalar(69,42,200));
-    Mat img7(480, 640, CV_8UC3, Scalar(69,42,200));
+	Mat img(240, 320, CV_8UC3, Scalar(69,42,200));
+    Mat img2(240, 320, CV_8UC3, Scalar(69,42,200));
+    Mat img3(240, 320, CV_8UC3, Scalar(69,42,200));
+    Mat img4(240, 320, CV_8UC3, Scalar(69,42,200));
+    Mat img5(240, 320, CV_8UC3, Scalar(69,42,200));
+    Mat img6(240, 320, CV_8UC3, Scalar(69,42,200));
+    Mat img7(240, 320, CV_8UC3, Scalar(69,42,200));
     Mat channels[3];
     
     SimpleBlobDetector::Params params;
@@ -108,13 +115,20 @@ int main(int argc, char** argv)
 	//namedWindow("converted");
 	namedWindow("BALL");
 
+	createTrackbar("hlow", "BALL", &hlow, 255, NULL);
+	createTrackbar("hhigh", "BALL", &hhigh, 255, NULL);
+	createTrackbar("slow", "BALL", &slow, 255, NULL);
+	createTrackbar("shigh", "BALL", &shigh, 255, NULL);
+	createTrackbar("vlow", "BALL", &vlow, 255, NULL);
+	createTrackbar("vhigh", "BALL", &vhigh, 255, NULL);
+
     while(1)
     {
 	cap >> img; //c++ is the future
 	cvtColor(img, img2, COLOR_BGR2GRAY);
 	img3 = img;
 	imshow("COMPUTER VISION", img3);
-	std::cout <<"FRAME"<<std::endl;
+	//std::cout <<"FRAME"<<std::endl;
 
 	image_u8_t img_header = { .width = img2.cols, //convert opencv to apriltag img
         	.height = img2.rows,
@@ -161,7 +175,7 @@ int main(int argc, char** argv)
        //find ball here
        // GaussianBlur(img3, img4, Size(5,5), 5,5,BORDER_ISOLATED);
         GaussianBlur(img3, img4, mysize, 5);//, 5, BORDER_ISOLATED);
-        imshow("Blurred", img4);
+        //imshow("Blurred", img4);
         split(img4, channels);
         channels[0]=Mat::zeros(img4.rows, img4.cols, CV_8UC1);//Set blue channel to 0
         channels[1]=Mat::zeros(img4.rows, img4.cols, CV_8UC1);//Set green channel to 0
@@ -169,9 +183,9 @@ int main(int argc, char** argv)
         cvtColor(img4, img5, COLOR_BGR2HSV);
 	//merge(channels, 3, img5);
 	//cvtColor(img5, img6, COLOR_BGR2GRAY);
-	namedWindow("hsv", WINDOW_AUTOSIZE);
-        imshow("hsv", img5);
-        inRange(img5, Scalar(15, 175, 175), Scalar(50, 255, 255), img6);
+	//namedWindow("hsv", WINDOW_AUTOSIZE);
+        //imshow("hsv", img5);
+        inRange(img5, Scalar(hlow,slow,vlow), Scalar(hhigh, shigh,vhigh), img6);
         bitwise_not(img6, img7);
 		//draw player pos's here
 		Point2f vertices[4];
@@ -196,9 +210,9 @@ int main(int argc, char** argv)
 			p0cmd = player0.eval(&player0pos, p0obstacles, (double)keypoints.at(0).pt.x,(double) keypoints.at(0).pt.y);
 			p1cmd = player1.eval(&player1pos, p1obstacles, (double)keypoints.at(0).pt.x,(double) keypoints.at(0).pt.y);
 			p2cmd = player2.eval(&player2pos, p2obstacles, (double)keypoints.at(0).pt.x,(double) keypoints.at(0).pt.y);
-        	sendCmd(1554593, (p0cmd == GOFWD || p0cmd == GOLEFT) ? 127: (p0cmd==GOBKWD) ? -127: 0, (p0cmd == GOFWD || p0cmd == GORGHT) ? 127: (p0cmd==GOBKWD) ? -127: 0); // nobody can understand this
-        	sendCmd(1481416, (p1cmd == GOFWD || p1cmd == GOLEFT) ? 127: (p1cmd==GOBKWD) ? -127: 0, (p1cmd == GOFWD || p1cmd == GORGHT) ? 127: (p1cmd==GOBKWD) ? -127: 0);
-        	sendCmd(1557094, (p2cmd == GOFWD || p2cmd == GOLEFT) ? 127: (p2cmd==GOBKWD) ? -127: 0, (p2cmd == GOFWD || p2cmd == GORGHT) ? 127: (p2cmd==GOBKWD) ? -127: 0);
+        	sendCmd(1554593, (p0cmd == GOFWD || p0cmd == GOLEFT) ? 127: (p0cmd==GOBKWD) ? -127: 1, (p0cmd == GOFWD || p0cmd == GORGHT) ? 127: (p0cmd==GOBKWD) ? -127: 1); // nobody can understand this
+        	sendCmd(1481416, (p1cmd == GOFWD || p1cmd == GOLEFT) ? 127: (p1cmd==GOBKWD) ? -127: 1, (p1cmd == GOFWD || p1cmd == GORGHT) ? 127: (p1cmd==GOBKWD) ? -127: 1);
+        	sendCmd(1557094, (p2cmd == GOFWD || p2cmd == GOLEFT) ? 127: (p2cmd==GOBKWD) ? -127: 1, (p2cmd == GOFWD || p2cmd == GORGHT) ? 127: (p2cmd==GOBKWD) ? -127: 1);
 		}
         else
         std::cout << "no balls found, no command issued"<<std::endl;
